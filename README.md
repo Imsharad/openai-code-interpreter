@@ -257,9 +257,9 @@ This project is licensed under the MIT License – see the [LICENSE](LICENSE) fi
 
 ## 📞 Contact
 
-Your Name – [@yourtwitter](https://twitter.com/yourtwitter) – email@example.com
+Sharad Jain – [@seekingtroooth](https://x.com/seekingtroooth) – sharadsfo@gmail.com
 
-Project Link: [https://github.com/yourusername/secure-data-analysis](https://github.com/yourusername/secure-data-analysis)
+Project Link: [https://github.com/Imsharad/openai-code-interpreter](https://github.com/Imsharad/openai-code-interpreter)
 
 ## 📚 Additional Resources
 
