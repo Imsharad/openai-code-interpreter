@@ -1,7 +1,6 @@
-// Start of Selection
 # 🛡️ Secure Data Analysis System
 
-Welcome to the Secure Data Analysis System – a robust, Python-based solution for analyzing data files using advanced Language Models (LLMs) in a fully isolated environment. By combining the power of OpenAI's language models with the enhanced security of Docker containerization, this system offers both cutting‐edge data insights and top-notch protection.
+Secure Data Analysis System – Python-based solution for analyzing data files (csv) using advanced Language Models (LLMs) in a fully isolated docker container environment. By combining the power of OpenAI's language models like o3-mini with the enhanced security of Docker containerization, this system offers both cutting‐edge data insights and top-notch protection.
 
 ## ✨ Features
 
@@ -30,7 +29,10 @@ Welcome to the Secure Data Analysis System – a robust, Python-based solution f
    - **logger.py:** Provides a centralized logging system.
    - **openai_util.py:** Offers utility functions for interacting with the OpenAI API.
 
-### Component InteractionssequenceDiagram
+### Component Interactions Sequence Diagram
+
+~~~mermaid
+sequenceDiagram
     participant User
     participant CLI
     participant FileAgent
@@ -49,7 +51,7 @@ Welcome to the Secure Data Analysis System – a robust, Python-based solution f
     Docker-->>CodeAgent: Results
     CodeAgent->>CLI: Analysis results
     CLI->>User: Display results
-```
+~~~
 
 ## 🚀 Getting Started
 
@@ -89,6 +91,9 @@ Run the analyzer with a CSV file and your question:
 ```bash
 python secure_analyzer.py --file your_data.csv --question "What are the monthly trends?"
 ```
+
+![Project Image](public/journey.png)
+
 
 ## 🔒 Security Features
 
@@ -266,3 +271,112 @@ Project Link: [https://github.com/Imsharad/openai-code-interpreter](https://gith
 - [OpenAI API Documentation](https://platform.openai.com/docs/api-reference)
 - [Docker Documentation](https://docs.docker.com/)
 - [Python Packaging Documentation](https://packaging.python.org/)
+
+## 📊 Detailed Diagrams
+
+To help illustrate the architecture and workflow of the project, the following Mermaid diagrams offer a detailed look at the components and their interactions.
+
+### 1. Component Class Diagram
+
+This diagram shows the core classes, their relationships, and how the agent system is structured:
+
+```mermaid
+classDiagram
+    class BaseAgent {
+        +developer_prompt: str
+        +model_name: str
+        +messages: ChatMessages
+        +task(user_task: str, tool_call_enabled: bool): str
+    }
+    class FileAccessAgent {
+        +setup_tools()
+    }
+    class PythonExecAgent {
+        +setup_tools()
+    }
+    BaseAgent <|-- FileAccessAgent
+    BaseAgent <|-- PythonExecAgent
+
+    class ChatMessages {
+        +add_developer_message(content: str)
+        +add_user_message(content: str)
+        +add_assistant_message(content: str)
+    }
+
+    class ToolManager {
+        +register_tool(tool: ToolInterface)
+        +get_tool_definitions()
+    }
+
+    class LanguageModelInterface {
+        <<interface>>
+        +generate_completion(model: str, messages: List, tools?: List, reasoning_effort?: str): Dict
+    }
+    class OpenAILanguageModel {
+        +generate_completion(model: str, messages: List, tools?: List, reasoning_effort?: str): Dict
+    }
+    LanguageModelInterface <|.. OpenAILanguageModel
+
+    BaseAgent --> ChatMessages
+    BaseAgent --> ToolManager
+    BaseAgent --> LanguageModelInterface
+```
+
+### 2. Detailed Sequence Diagram
+
+This diagram describes a detailed flow of how an analysis request passes through the different components—from initial file access to code execution and results presentation:
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant CLI as "CLI (secure_analyzer.py)"
+    participant FA as "FileAccessAgent"
+    participant CA as "PythonExecAgent"
+    participant TM as "ToolManager"
+    participant LLM as "LLM Interface"
+    participant Docker as "Docker Container"
+
+    User->>CLI: Start analysis with CSV & question
+    CLI->>FA: Call task(file_prompt)
+    FA->>TM: Invoke safe_file_access(filename)
+    TM->>Docker: Read file content securely
+    Docker-->>TM: Return file content
+    TM-->>FA: Deliver file content
+    FA-->>CLI: Provide file context
+    CLI->>CA: Call task(question with context)
+    CA->>LLM: Generate code using LLM
+    LLM-->>CA: Return generated code
+    CA->>TM: Execute code via execute_python_code
+    TM->>Docker: Run Python code in container
+    Docker-->>TM: Return execution result
+    TM-->>CA: Forward execution result
+    CA-->>CLI: Return final analysis result
+    CLI->>User: Display analysis result
+```
+
+### 3. High-Level Data Flow Diagram
+
+This diagram provides an overview of the high-level data flow within the system—from user input to the execution results reflecting back to the user:
+
+```mermaid
+graph LR
+    A[User Input: CSV file and Question]
+    B[CLI (secure_analyzer.py)]
+    C[FileAccessAgent]
+    D[PythonExecAgent]
+    E[ToolManager]
+    F[LLM (OpenAI API)]
+    G[Docker Container]
+
+    A --> B
+    B --> C
+    B --> D
+    C --> E
+    D --> E
+    E --> F
+    E --> G
+    G --> E
+    E --> D
+```
+
+These diagrams are intended to provide both a detailed and high-level view of how the various modules interact, how data flows through the system, and how security boundaries are maintained via Docker containerization and controlled tool interfaces.
