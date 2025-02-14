@@ -360,21 +360,67 @@ This diagram provides an overview of the high-level data flow within the systemâ
 
 ```mermaid
 graph LR
-    A[User Input: CSV file and Question]
-    B["CLI (secure-analyzer.py)"]
-    C[FileAccessAgent]
-    D[PythonExecAgent]
-    E[ToolManager]
-    F["LLM (OpenAI API)"]
-    G[Docker Container]
+    A[User Input: CSV file + Question]:::user
+    B["CLI (secure-analyzer.py)"]:::cli
+    C[FileAccessAgent]:::agent
+    D[PythonExecAgent]:::agent
+    E[ToolManager]:::service
+    F["LLM (OpenAI API)"]:::external
+    G[Docker Container]:::infra
+    H[OpenAIClientFactory]:::service
+    I[LanguageModelInterface]:::interface
+    J[Logger]:::util
+    K[SecurityValidator]:::security
+    
+    subgraph Agents
+        C
+        D
+    end
+    
+    subgraph Services
+        E
+        H
+        I
+    end
+    
+    subgraph Security
+        K
+        G
+    end
 
-    A --> B
-    B --> C
-    B --> D
-    C --> E
-    D --> E
-    E --> F
-    E --> G
-    G --> E
-    E --> D
+    A -->|"1. Sends analysis request\n(file + question)"| B
+    B -->|"2. Delegates file access"| C
+    B -->|"3. Routes analysis task"| D
+    C -->|"4. Requests tool execution"| E
+    D -->|"5. Manages code generation"| E
+    E -->|"6. Validates request"| K
+    K -->|"7. Approved request"| E
+    E -->|"8. Executes secure operation"| G
+    E -->|"9. Generates LLM prompt"| I
+    I -->|"10. Routes to API client"| H
+    H -->|"11. Calls API"| F
+    F -->|"12. Returns completion"| H
+    H -->|"13. Processes response"| I
+    I -->|"14. Delivers to agent"| E
+    G -->|"15. Returns execution result"| E
+    E -->|"16. Finalizes output"| D
+    D -->|"17. Formats results"| B
+    B -->|"18. Presents analysis"| A
+    
+    classDef user fill:#c9f7d4,stroke:#2b6620;
+    classDef cli fill:#fff4de,stroke:#a2790d;
+    classDef agent fill:#d3ddfa,stroke:#1c3a94;
+    classDef service fill:#e1d5f7,stroke:#5015a0;
+    classDef external fill:#ffd8d8,stroke:#c90000;
+    classDef infra fill:#d1f0f6,stroke:#0a708a;
+    classDef util fill:#f0f0f0,stroke:#666666;
+    classDef interface fill:#fce1e4,stroke:#d60047;
+    classDef security fill:#ffebcc,stroke:#e67e00;
+
+    click G href "https://docs.docker.com/engine/security/" "Docker Security Docs"
+    click K href "#security-features" "Project Security Details"
+    
+    %% Security Note
+    note["ðŸ”’ All Docker operations run with:\n- Non-root user\n- Resource constraints\n- Network isolation"]:::security
+    note -.- G
 ```
