@@ -1,0 +1,78 @@
+# Ignore .env files which may contain sensitive information
+.env
+.env.*
+!.env.example
+
+# Ignore node_modules directory
+node_modules/
+
+# Ignore build output directories
+dist/
+build/
+out/
+
+# Ignore logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Ignore runtime data
+tmp/
+temp/
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE and editor files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*~
+.project
+.settings
+.classpath
+
+# Ignore coverage directories
+coverage/
+.nyc_output/
+
+# Ignore compiled files
+*.pyc
+*.class
+*.o
+*.so
+
+# Ignore test results
+test-results/
+
+# Ignore database files
+*.db
+*.sqlite
+
+# Ignore backup files
+*.bak
+*.swp
+
+# Ignore lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Ignore dotenv files
+.envrc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+
+*.log
+# *.ipynb
