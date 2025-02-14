@@ -361,7 +361,7 @@ This diagram provides an overview of the high-level data flow within the systemâ
 ```mermaid
 graph LR
     A[User Input: CSV file and Question]
-    B[CLI (secure_analyzer.py)]
+    B[CLI (secure-analyzer.py)]
     C[FileAccessAgent]
     D[PythonExecAgent]
     E[ToolManager]
@@ -378,5 +378,3 @@ graph LR
     G --> E
     E --> D
 ```
-
-These diagrams are intended to provide both a detailed and high-level view of how the various modules interact, how data flows through the system, and how security boundaries are maintained via Docker containerization and controlled tool interfaces.
