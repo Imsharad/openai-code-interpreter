@@ -371,10 +371,16 @@ graph LR
     I[LanguageModelInterface]:::interface
     J[Logger]:::util
     K[SecurityValidator]:::security
+    L[BaseAgent]:::abstract
+    M[ChatMessages]:::data
+    N[ToolInterface]:::interface
+    O[PythonExecTool]:::tool
+    P[FileAccessTool]:::tool
     
     subgraph Agents
         C
         D
+        L
     end
     
     subgraph Services
@@ -388,25 +394,36 @@ graph LR
         G
     end
 
-    A -->|"1. Sends analysis request\n(file + question)"| B
-    B -->|"2. Delegates file access"| C
-    B -->|"3. Routes analysis task"| D
-    C -->|"4. Requests tool execution"| E
-    D -->|"5. Manages code generation"| E
-    E -->|"6. Validates request"| K
-    K -->|"7. Approved request"| E
-    E -->|"8. Executes secure operation"| G
-    E -->|"9. Generates LLM prompt"| I
-    I -->|"10. Routes to API client"| H
-    H -->|"11. Calls API"| F
-    F -->|"12. Returns completion"| H
-    H -->|"13. Processes response"| I
-    I -->|"14. Delivers to agent"| E
-    G -->|"15. Returns execution result"| E
-    E -->|"16. Finalizes output"| D
-    D -->|"17. Formats results"| B
-    B -->|"18. Presents analysis"| A
+    subgraph Core Components
+        M
+        N
+    end
+
+    %% Main flow
+    A --> B
+    B --> C & D
+    C & D --> E
+    E --> K
+    K --> E
+    E --> G & I
+    I --> H
+    H --> F
+    F --> H
+    H --> I
+    I --> E
+    G --> E
+    E --> D
+    D --> B
+    B --> A
     
+    %% Class relationships
+    L --> C & D
+    L --> M
+    L --> I
+    E --> O & P
+    O & P --> N
+    J --> C & D & E
+
     classDef user fill:#c9f7d4,stroke:#2b6620;
     classDef cli fill:#fff4de,stroke:#a2790d;
     classDef agent fill:#d3ddfa,stroke:#1c3a94;
@@ -416,11 +433,16 @@ graph LR
     classDef util fill:#f0f0f0,stroke:#666666;
     classDef interface fill:#fce1e4,stroke:#d60047;
     classDef security fill:#ffebcc,stroke:#e67e00;
+    classDef abstract fill:#f8f9fa,stroke:#adb5bd,stroke-dasharray: 5 5;
+    classDef data fill:#e3f2fd,stroke:#1976d2;
+    classDef tool fill:#f3e5f5,stroke:#9c27b0;
 
     click G href "https://docs.docker.com/engine/security/" "Docker Security Docs"
     click K href "#security-features" "Project Security Details"
     
-    %% Security Note
-    note["🔒 All Docker operations run with:\n- Non-root user\n- Resource constraints\n- Network isolation"]:::security
+    note["🔒 Security Layers:
+    1. Path validation
+    2. Docker isolation
+    3. LLM output sanitization
+    4. Resource limits"]:::security
     note -.- G
-```
