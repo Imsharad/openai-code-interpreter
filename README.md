@@ -361,11 +361,11 @@ This diagram provides an overview of the high-level data flow within the systemâ
 ```mermaid
 graph LR
     A[User Input: CSV file and Question]
-    B[CLI (secure-analyzer.py)]
+    B["CLI (secure-analyzer.py)"]
     C[FileAccessAgent]
     D[PythonExecAgent]
     E[ToolManager]
-    F[LLM (OpenAI API)]
+    F["LLM (OpenAI API)"]
     G[Docker Container]
 
     A --> B
