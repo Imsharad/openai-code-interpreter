@@ -13,6 +13,7 @@ Secure Data Analysis System – Python-based solution for analyzing data files (
 
 ## 🏛️ Architecture
 
+```mermaid
 flowchart TD
     %% Entry Layer
     subgraph "Entry Layer"
@@ -105,6 +106,7 @@ flowchart TD
     classDef tool fill:#ffffcc,stroke:#cccc00,stroke-width:2px;
     classDef docker fill:#cce5ff,stroke:#0056b3,stroke-width:2px;
     classDef util fill:#e6ccff,stroke:#800080,stroke-width:2px;
+```
 
 ### Core Components
 
