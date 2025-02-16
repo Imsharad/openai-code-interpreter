@@ -13,6 +13,99 @@ Secure Data Analysis System – Python-based solution for analyzing data files (
 
 ## 🏛️ Architecture
 
+flowchart TD
+    %% Entry Layer
+    subgraph "Entry Layer"
+        CLI["CLI (secure_analyzer.py)"]
+    end
+
+    %% Agent Layer
+    subgraph "Agent Layer"
+        FAA["FileAccessAgent"]
+        PEA["PythonExecAgent"]
+        Base["BaseAgent (abstract)"]
+    end
+
+    %% Tool Layer
+    subgraph "Tool Layer"
+        FAT["FileAccessTool"]
+        PCT["PythonCodeInterpreterTool"]
+        TI["ToolInterface (abstract)"]
+    end
+
+    %% Service Layer
+    subgraph "Service Layer"
+        LMI["LanguageModelInterface"]
+        OLM["OpenAI Language Model"]
+        OCF["OpenAI Client Factory"]
+    end
+
+    %% Execution Layer
+    subgraph "Execution Layer"
+        DC["Docker Container"]
+    end
+
+    %% Utility Layer
+    subgraph "Utility Layer"
+        Logger["Logger"]
+        OAU["OpenAI Util"]
+    end
+
+    %% Relationships
+    CLI -->|"initiates"| FAA
+    CLI -->|"initiates"| PEA
+
+    FAA -->|"performs file read using"| FAT
+    PEA -->|"executes code using"| PCT
+
+    FAA -->|"logs"| Logger
+    PEA -->|"logs"| Logger
+
+    PEA -->|"calls"| LMI
+    LMI -->|"routes request to"| OLM
+    OLM -->|"utilizes"| OCF
+
+    FAA -->|"executes in"| DC
+    PEA -->|"executes in"| DC
+
+    %% Utilities are used across the system
+    LMI -->|"assists with"| OAU
+
+    %% Inheritance and Interface relationships (informational - not directional)
+    Base --- FAA
+    Base --- PEA
+    TI --- FAT
+    TI --- PCT
+
+    %% Click Events
+    click CLI "https://github.com/imsharad/openai-code-interpreter/blob/main/secure_analyzer.py"
+    click FAA "https://github.com/imsharad/openai-code-interpreter/blob/main/resources/registry/agents/file_access_agent.py"
+    click PEA "https://github.com/imsharad/openai-code-interpreter/blob/main/resources/registry/agents/python_code_exec_agent.py"
+    click LMI "https://github.com/imsharad/openai-code-interpreter/blob/main/resources/object_oriented_agents/services/language_model_interface.py"
+    click OLM "https://github.com/imsharad/openai-code-interpreter/blob/main/resources/object_oriented_agents/services/openai_language_model.py"
+    click OCF "https://github.com/imsharad/openai-code-interpreter/blob/main/resources/object_oriented_agents/services/openai_factory.py"
+    click DC "https://github.com/imsharad/openai-code-interpreter/tree/main/resources/docker"
+    click FAT "https://github.com/imsharad/openai-code-interpreter/blob/main/resources/registry/tools/file_access_tool.py"
+    click PCT "https://github.com/imsharad/openai-code-interpreter/blob/main/resources/registry/tools/python_code_interpreter_tool.py"
+    click Logger "https://github.com/imsharad/openai-code-interpreter/blob/main/resources/object_oriented_agents/utils/logger.py"
+    click OAU "https://github.com/imsharad/openai-code-interpreter/blob/main/resources/object_oriented_agents/utils/openai_util.py"
+
+    %% Styles
+    class CLI cli
+    class FAA,PEA agent
+    class LMI,OLM,OCF service
+    class FAT,PCT tool
+    class DC docker
+    class Logger,OAU util
+
+    %% Class Definitions
+    classDef cli fill:#ffebcd,stroke:#8b4513,stroke-width:2px;
+    classDef agent fill:#ffcccc,stroke:#cc0000,stroke-width:2px;
+    classDef service fill:#ccffcc,stroke:#008000,stroke-width:2px;
+    classDef tool fill:#ffffcc,stroke:#cccc00,stroke-width:2px;
+    classDef docker fill:#cce5ff,stroke:#0056b3,stroke-width:2px;
+    classDef util fill:#e6ccff,stroke:#800080,stroke-width:2px;
+
 ### Core Components
 
 1. **Agent System** (`resources/registry/agents/`):  
